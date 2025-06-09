@@ -101,7 +101,9 @@ function promiseAll(promises) {
           'then' in promise &&
           typeof promise.then === 'function'
         ) {
-        promise
+        // 這邊的 resolve 是把 forEach 內的 promise 包裝成一個新的 Promise
+        // 這樣可以確保即使 promise 是一個非 Promise 的物件，也能正確處理
+        Promise.resolve(promise)
           .then((value) => handleResolution(value, index))
           .catch(reject);
       } else {
@@ -111,7 +113,7 @@ function promiseAll(promises) {
 
     // promises.forEach((promise, index) => {
     //   if (promise.then) {
-    //     promise()
+    //     Promise.resolve(promise)
     //       .then((value) => handleResolution(value, index))
     //       .catch(reject);
     //   } else {
